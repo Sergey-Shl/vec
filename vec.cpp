@@ -33,7 +33,7 @@ public:
 	{
 		if (this->_array != NULL)
 		{
-			::ZeroMemory(this->_array, this->_arraySize);
+			delete[] this->_array;
 		}
 		this->_arraySize = 0;
 		this->_array = new T[this->_arraySize];
