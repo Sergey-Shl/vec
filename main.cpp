@@ -174,33 +174,58 @@ public:
 	{
 
 		ofstream of;
+		try{
+			of.open("library.inf");
+			if (!of.is_open())
+				throw 1;
 
-		of.open("library.inf");
-		of << getBooskQuantity() << "\n";
+			of << getBooskQuantity() << "\n";
 
-		for (int i = 0; i < getBooskQuantity(); i++)
-		{
-			of << getBookId(i) << "\n";
-			of << getBookInfo(i, 1).size() << " ";
-			of << getBookInfo(i, 1) << "\n";
-			of << getBookInfo(i, 2).size() << " ";
-			of << getBookInfo(i, 2) << "\n";
-			of << getBookYear(i) << "\n";
+			for (int i = 0; i < getBooskQuantity(); i++)
+			{
+				of << getBookId(i) << "\n";
+				//of << getBookInfo(i, 1).size() << " ";
+				of << getBookInfo(i, 1) << "\n";
+				//of << getBookInfo(i, 2).size() << " ";
+				of << getBookInfo(i, 2) << "\n";
+				of << getBookYear(i) << "\n";
+			}
+		}
+		catch(int e){
+			if (e == 1)
+				cout << "Can't open file!" << endl;
+			return;
 		}
 
 		of.close();
-
 		cout << getBooskQuantity() << " books was succeseful saved" << endl;
 
 	}
 
 	void loadLib()
 	{
+		char c;
+		cout << "Type: r - replace base in memory, a - add" << endl;
+		c = getchar();
+		getchar();
+
+		if (c == 'r')
+			books.clear();
+
+		
 		int num;
 		string s;
 		ifstream ifs;
-
-		ifs.open("library.inf");
+		try{
+			ifs.open("library.inf");
+			if (!ifs.is_open())
+				throw 1;
+		}
+		catch (int e){
+			if (e == 1)
+				cout << "Can't open file!" << endl;
+			return;
+		}
 		ifs >> num;
 		cout << "Books was loaded: " << num << endl;
 
@@ -233,11 +258,30 @@ public:
 
 	void printLib()
 	{
+		cout << "Library consist " << getBooskQuantity() << " books." << endl;
 		for (int i = 0; i < getBooskQuantity(); i++)
 		{
 			cout << "Name: " << getBookInfo(i, 1) << endl;
 			cout << "Author: " << getBookInfo(i, 2) << endl;
 			cout << "Year: " << getBookYear(i) << endl;
+			cout << "====" << endl;
+		}
+	}
+
+	void delBook()
+	{
+		int n;
+		cout << "Enter number of book: ";
+		cin >> n;
+		getchar();
+		if ((n < getBooskQuantity()) && (n >= 0))
+		{
+			books.popIndex(n);
+			cout << "Book was deleted" << endl;
+		}
+		else
+		{
+			cout << "Incorrect nu,ber!" << endl;
 		}
 	}
 };
@@ -250,7 +294,7 @@ int main()
 
 	do
 	{
-		cout << "Tyepe: e - exit, a - add new book, s - save, l - load, d - delete item" << endl;
+		cout << "Tyepe: e - exit, a - add new book, s - save, l - load, d - delete item, p - print all" << endl;
 		c = getchar();
 		getchar();
 
@@ -264,6 +308,12 @@ int main()
 				break;
 			case 'l':
 				l.loadLib();
+				break;
+			case 'p':
+				l.printLib();
+				break;
+			case 'd':
+				l.delBook();
 				break;
 
 		default:
